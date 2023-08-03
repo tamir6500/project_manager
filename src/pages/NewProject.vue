@@ -19,7 +19,7 @@
           <td>{{ project.name }}</td>
           <td>{{ project.number }}</td>
           <td style="display: flex; justify-content: space-evenly;">
-            <router-link to="/contacts">
+            <router-link :to="`/project/${project.id}/contacts`">
             <button @click="startProject(index)">התנעה</button>
             </router-link>
             <button style="background-color:red" @click="deleteProject(index)">מחק</button>
@@ -31,23 +31,28 @@
 </template>
 
 <script>
+// import { sendRequest } from '../api/main.js';
 export default {
   data() {
     return {
-      projects: [
-        { name: "Project 1", number: 101 },
-        { name: "Project 2", number: 202 },
-        { name: "Project 3", number: 303 },
-      ],
+      projects: [],
+      // for debug
       newProject: {
         name: "",
         number: "",
+        id: ""
       },
+      Http: ""
     };
   },
   methods: {
+    // for debug
+    generateTimestampId() {
+    this.newProject.id = Date.now().toString();
+    },
     addProject() {
       if (this.newProject.name && this.newProject.number) {
+        this.generateTimestampId()
         this.projects.push({ ...this.newProject });
         this.newProject.name = "";
         this.newProject.number = "";
@@ -58,8 +63,18 @@ export default {
     },
     deleteProject(index) {
       this.projects.splice(index, 1);
-  }
+   },
   },
+  //   mounted() {
+  //   // Make a GET request when the component is mounted
+  //   sendRequest('GET', '/projects')
+  //     .then(response => {
+  //       this.projects = response;
+  //     })
+  //     .catch(error => {
+  //       console.error('Error fetching projects:', error);
+  //     });
+  // },
   };
 </script>
 

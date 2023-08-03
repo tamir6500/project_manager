@@ -9,7 +9,7 @@
     <!-- Inputs to add a new row -->
     <div v-if="showInputs" class="input-container">
       <input v-model="newCustomer.fullName" placeholder="שם מלא" />
-      <input v-model="newCustomer.role" placeholder="תפקיד" />
+      <input v-model="newCustomer.title" placeholder="תפקיד" />
       <input v-model="newCustomer.phone" placeholder="טלפון" />
       <input v-model="newCustomer.email" placeholder="אימייל" />
       <button @click="addCustomer">הוסף</button>
@@ -29,7 +29,7 @@
       <tbody>
         <tr v-for="(customer, index) in customers" :key="index">
           <td>{{ customer.fullName }}</td>
-          <td>{{ customer.role }}</td>
+          <td>{{ customer.title }}</td>
           <td>{{ customer.phone }}</td>
           <td>{{ customer.email }}</td>
           <td>
@@ -66,19 +66,20 @@
       </tbody>
     </table>
     <router-link to="/checklist">
-    <button>הבא</button>
+    <button @click="generatePostObject">הבא</button>
     </router-link>
   </div>
 </template>
 
 <script>
+import { sendRequest } from '../api/main.js';
 export default {
   data() {
     return {
       showInputs: false,
       newCustomer: {
         fullName: "",
-        role: "",
+        title: "",
         phone: "",
         email: "",
       },
@@ -91,20 +92,20 @@ export default {
     addCustomer() {
       if (
         this.newCustomer.fullName ||
-        this.newCustomer.role ||
+        this.newCustomer.title ||
         this.newCustomer.phone ||
         this.newCustomer.email
       ) {
         this.customers.push({ ...this.newCustomer });
         this.newCustomer.fullName = "";
-        this.newCustomer.role = "";
+        this.newCustomer.title = "";
         this.newCustomer.phone = "";
         this.newCustomer.email = "";
         this.showInputs = false;
       }
     },
     deleteCustomer(index) {
-      this.customers.splice(index, 1);
+      this.contacts.splice(index, 1);
     },
 
      // New methods for internal mail list
@@ -116,6 +117,21 @@ export default {
     },
     deleteEmail(index) {
       this.internalEmails.splice(index, 1);
+    },
+    generatePostObject(){
+        const postObject = {"project_id": this.$route.params.project_id, "contacts": this.customers, "internal_contacts": this.internalEmails}
+        console.log(postObject)
+        return postObject
+    },
+    addProject(postObject) {
+      // Make a POST request to add a new project
+      sendRequest('POST', '/projects', postObject)
+        .then(response => {
+          console.log('New project added:', response);
+        })
+        .catch(error => {
+          console.error('Error adding project:', error);
+        });
     },
   },
 };

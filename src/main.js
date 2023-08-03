@@ -11,7 +11,7 @@ import CheckList from './pages/CheckList.vue';
 
 const routes = [
     { path: '/', component: NewProject },
-    { path: '/contacts', component: contacts },
+    { path: '/project/:project_id/contacts', component: contacts },
     { path: '/checklist', component: CheckList },
     
 
