@@ -42,7 +42,6 @@ export default {
         number: "",
         id: ""
       },
-      Http: ""
     };
   },
   methods: {

@@ -65,7 +65,7 @@
         </tr>
       </tbody>
     </table>
-    <router-link to="/checklist">
+    <router-link :to="`/project/${$route.params.project_id}/checklist`">
     <button @click="generatePostObject">הבא</button>
     </router-link>
   </div>
@@ -123,8 +123,9 @@ export default {
         console.log(postObject)
         return postObject
     },
-    addProject(postObject) {
+    addProject() {
       // Make a POST request to add a new project
+      const postObject = this.generatePostObject()
       sendRequest('POST', '/projects', postObject)
         .then(response => {
           console.log('New project added:', response);
